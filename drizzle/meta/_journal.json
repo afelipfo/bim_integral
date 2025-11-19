@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1763507702466,
+      "tag": "0000_dizzy_red_shift",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1763507859815,
+      "tag": "0001_plain_clea",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1763521385586,
+      "tag": "0002_stiff_the_twelve",
+      "breakpoints": true
+    }
+  ]
+}

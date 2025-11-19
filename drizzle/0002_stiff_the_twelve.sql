@@ -1,0 +1,123 @@
+CREATE TABLE `bimExecutionPlans` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`projectId` int NOT NULL,
+	`version` varchar(50) NOT NULL,
+	`status` enum('draft','approved','active','archived') NOT NULL DEFAULT 'draft',
+	`informationRequirements` text,
+	`levelOfInformation` enum('LOI_1','LOI_2','LOI_3','LOI_4','LOI_5','LOI_6'),
+	`commonDataEnvironment` varchar(255),
+	`leadAppointedParty` varchar(255),
+	`taskTeamLeaders` text,
+	`deliverables` text,
+	`milestones` text,
+	`createdBy` int NOT NULL,
+	`approvedBy` int,
+	`approvedAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `bimExecutionPlans_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `clashDetections` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`projectId` int NOT NULL,
+	`runId` varchar(100) NOT NULL,
+	`runDate` timestamp NOT NULL DEFAULT (now()),
+	`clashType` enum('hard','soft','clearance','duplicate') NOT NULL,
+	`severity` enum('critical','high','medium','low') NOT NULL,
+	`status` enum('new','active','reviewed','approved','resolved','ignored') NOT NULL DEFAULT 'new',
+	`element1Id` varchar(255) NOT NULL,
+	`element1Type` varchar(100),
+	`element1Discipline` varchar(50),
+	`element2Id` varchar(255) NOT NULL,
+	`element2Type` varchar(100),
+	`element2Discipline` varchar(50),
+	`clashPoint` text,
+	`distance` float,
+	`volume` float,
+	`assignedTo` int,
+	`resolvedBy` int,
+	`resolvedAt` timestamp,
+	`resolution` text,
+	`detectedBy` varchar(100),
+	`notes` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `clashDetections_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `cobieData` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`projectId` int NOT NULL,
+	`sheetType` enum('facility','floor','space','zone','type','component','system','assembly','connection','spare','resource','job','impact','document','attribute','coordinate') NOT NULL,
+	`name` varchar(255) NOT NULL,
+	`createdBy` varchar(255),
+	`createdOn` timestamp,
+	`category` varchar(255),
+	`extSystem` varchar(255),
+	`extObject` varchar(255),
+	`extIdentifier` varchar(255),
+	`data` text,
+	`uploadedBy` int NOT NULL,
+	`uploadedAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `cobieData_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `coordinationSessions` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`projectId` int NOT NULL,
+	`title` varchar(255) NOT NULL,
+	`description` text,
+	`sessionType` enum('clash_review','design_review','coordination','approval') NOT NULL,
+	`status` enum('scheduled','in_progress','completed','cancelled') NOT NULL DEFAULT 'scheduled',
+	`scheduledDate` timestamp,
+	`startedAt` timestamp,
+	`completedAt` timestamp,
+	`organizer` int NOT NULL,
+	`participants` text,
+	`disciplines` text,
+	`agenda` text,
+	`decisions` text,
+	`actionItems` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `coordinationSessions_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `ifcModels` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`modelId` int NOT NULL,
+	`fileName` varchar(255) NOT NULL,
+	`fileUrl` text NOT NULL,
+	`fileSize` int,
+	`ifcVersion` varchar(50),
+	`ifcSchema` varchar(100),
+	`discipline` enum('architecture','structure','mep','civil','landscape') NOT NULL,
+	`lod` enum('LOD_100','LOD_200','LOD_300','LOD_350','LOD_400','LOD_500') NOT NULL,
+	`elementCount` int,
+	`buildingStoreys` int,
+	`spaces` int,
+	`isFederated` boolean DEFAULT false,
+	`federatedModels` text,
+	`uploadedBy` int NOT NULL,
+	`uploadedAt` timestamp NOT NULL DEFAULT (now()),
+	`lastModified` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `ifcModels_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `modelQualityChecks` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`modelId` int NOT NULL,
+	`checkDate` timestamp NOT NULL DEFAULT (now()),
+	`checkType` enum('geometry','metadata','naming','classification','coordinates','units','duplicates','iso19650') NOT NULL,
+	`status` enum('passed','failed','warning') NOT NULL,
+	`issuesFound` int DEFAULT 0,
+	`criticalIssues` int DEFAULT 0,
+	`warnings` int DEFAULT 0,
+	`results` text,
+	`recommendations` text,
+	`checkedBy` varchar(100),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `modelQualityChecks_id` PRIMARY KEY(`id`)
+);
